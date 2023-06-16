@@ -5,10 +5,10 @@
 #include "WiFi.h"
 #include <Adafruit_Sensor.h>
 
-//definisi wifi
+// Masukkan nama wifi dan password
 const char* ssid = "bukanwarmindo";
 const char* password = "orakarik";
-//digunakan local host laptop dan digunakan untuk nanti membuka Dashboard di Handphone
+// Masukkan ip address MQTT broker
 const char* mqtt_server = "192.168.181.232";
 
 #define DHTPIN 4     // Digital pin connected to the DHT sensor
