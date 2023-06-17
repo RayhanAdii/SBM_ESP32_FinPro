@@ -1,10 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rowdies&display=swap');
+
+* {
+  box-sizing: border-box;
+}
 html {
-  font-family: Arial, Helvetica, sans-serif; 
+  font-family: 'Poppins', Arial, Helvetica, sans-serif; 
   display: inline-block; 
   text-align: center;
 }
+body {  
+  margin: 0;
+}
 h1 {
-  font-size: 1.8rem; 
+  font-family: 'Rowdies', Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 1.9rem; 
   color: white;
 }
 p { 
@@ -14,20 +25,39 @@ p {
   overflow: hidden; 
   background-color: #0A1128;
 }
-body {  
-  margin: 0;
+h2 {
+  font-size: 1.5rem;
+  margin-top: 2%;
+  color: #0A1128;
+}
+.main-container {
+  padding-bottom: 5%;
 }
 .content { 
-  padding: 5%;
+  padding: 1% 5% 5% 5%;
 }
 .card-grid { 
   max-width: 1200px; 
-  margin: 0 auto; 
-  display: grid; 
-  grid-gap: 2rem; 
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin: auto; 
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+}
+.container {
+  max-width: 1200px; 
+  margin: auto;
+}
+.card-grid-bottom { 
+  margin: auto; 
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; 
+  gap: 3rem; 
 }
 .card { 
+  padding: 0% 5% 2% 5%;
+  min-width: 370px;
   background-color: white; 
   box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);
 }
@@ -35,4 +65,15 @@ body {
   font-size: 1.2rem;
   font-weight: bold;
   color: #034078
+}
+@media screen and (min-width: 1440px) {
+  .card-grid {
+    display: grid;
+    justify-items: center;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .card-grid-bottom { 
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5rem; 
+  }
 }
