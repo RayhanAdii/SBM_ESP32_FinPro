@@ -90,6 +90,7 @@ void mqttconnect() {
 }
 
 
+
 void setup() {
   Serial.begin(115200);
   dht.begin();
@@ -274,8 +275,4 @@ void loop() {
   client.publish(Tilt_TOPIC, msg);
 
   }
-
-
-
-
 }
