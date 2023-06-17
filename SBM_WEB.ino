@@ -31,6 +31,7 @@ const char index_html[] PROGMEM = R"rawliteral(
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/dundorma/SBM-FINALPROJECT-FRONTEND/style.css">
   <script src="http://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </head>
 <body>
   <div class="topnav">
@@ -62,6 +63,14 @@ const char index_html[] PROGMEM = R"rawliteral(
       <div class="card">
         <p class="card-title">Sudut Gyro</p>
         <p id="gyro"></p>
+      </div> 
+    </div>
+  </div>
+  <div class="container">
+    <div class="card-grid">
+      <div class="card">
+        <p class="card-title">Chart Velocity</p>
+        <canvas id="chart-velocity"></canvas>
       </div> 
     </div>
   </div>
@@ -208,6 +217,10 @@ const char index_html[] PROGMEM = R"rawliteral(
     animationRule: "linear"
   }).draw();
 
+  let xValues = [0];
+  let yValues = [0];
+  let timer_buff = 1;
+
   websocket.addEventListener("message", (event) => {
     gaugeTemp.value = JSON.parse(event.data).temperature;
     gaugePotensio.value = JSON.parse(event.data).potensiometer / 40.95;
@@ -217,7 +230,26 @@ const char index_html[] PROGMEM = R"rawliteral(
     const gyro = document.querySelector("#gyro");
     distance.innerHTML = JSON.parse(event.data).distance;
     // gyro.innerHTML = JSON.parse(event.data).gyro;
-  });
+
+
+    /// Velocity Chart
+    xValues.push(timer_buff);
+    yValues.push(JSON.parse(event.data).potensiometer / 40.95);
+    timer_buff +=1;
+    new Chart("chart-velocity", {
+      type: "line",
+      data: {
+        labels: xValues.slice(-30),
+        datasets: [{
+          data: yValues.slice(-30),
+          borderColor: "red",
+          fill: false
+        }]
+      },
+      options: {
+        legend: {display: false}
+      }
+    });
   </script>
 </body>
 </html>
