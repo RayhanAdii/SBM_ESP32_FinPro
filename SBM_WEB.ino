@@ -258,7 +258,8 @@ const char index_html[] PROGMEM = R"rawliteral(
         }]
       },
       options: {
-        legend: {display: false}
+        legend: {display: false},
+        animation: false
       }
     });
     
