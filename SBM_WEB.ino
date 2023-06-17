@@ -73,6 +73,12 @@ const char index_html[] PROGMEM = R"rawliteral(
         <canvas id="chart-velocity"></canvas>
       </div> 
     </div>
+    <div class="card-grid">
+      <div class="card">
+        <p class="card-title">Jarak Ditempuh</p>
+        <h3 id="jarak-ditempuh"></h3>
+      </div> 
+    </div>
   </div>
 
   <script defer>
@@ -219,16 +225,21 @@ const char index_html[] PROGMEM = R"rawliteral(
 
   let xValues = [0];
   let yValues = [0];
+  let jarakDitempuh = 0;
   let timer_buff = 1;
 
   websocket.addEventListener("message", (event) => {
     gaugeTemp.value = JSON.parse(event.data).temperature;
     gaugePotensio.value = JSON.parse(event.data).potensiometer / 40.95;
     gaugeHum.value = JSON.parse(event.data).humidity;
+
+    jarakDitempuh += JSON.parse(event.data).potensiometer / 40.95;
     
     const distance = document.querySelector("#distance");
     const gyro = document.querySelector("#gyro");
+    const jarakDitempuhHTML = document.querySelector("#jarak-ditempuh");
     distance.innerHTML = JSON.parse(event.data).distance;
+    jarakDitempuhHTML.innerHTML = jarakDitempuh;
     // gyro.innerHTML = JSON.parse(event.data).gyro;
 
 
