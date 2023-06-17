@@ -261,6 +261,8 @@ const char index_html[] PROGMEM = R"rawliteral(
         legend: {display: false}
       }
     });
+    
+  });
   </script>
 </body>
 </html>
