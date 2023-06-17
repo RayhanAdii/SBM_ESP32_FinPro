@@ -5,25 +5,43 @@
 #include "WiFi.h"
 #include <Adafruit_Sensor.h>
 
-// Masukkan nama wifi dan password
-const char* ssid = "bukanwarmindo";
-const char* password = "orakarik";
-// Masukkan ip address MQTT broker
-const char* mqtt_server = "192.168.181.232";
+//definisi wifi
+const char* ssid = "E-49 BARU";
+const char* password = "pogungbaru";
+//digunakan local host laptop dan digunakan untuk nanti membuka Dashboard di Handphone
+const char* mqtt_server = "192.168.0.110";
 
 #define DHTPIN 4     // Digital pin connected to the DHT sensor
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 #define TRIGGER_PIN 5
 #define ECHO_PIN 18
 
-unsigned long previousMillis = 0;
-const unsigned long interval = 1000; // Interval between distance measurements (in milliseconds)
+const int buttonPinLeft = 21; // increment button
+const int buttonPinFront = 22; // decrement button
+const int buttonPinRight = 23; // decrement button
+
+volatile int tiltValue = 0;
+int buttonStateLeft = 0;
+int buttonStateFront = 0;
+int buttonStateRight = 0;
+int lastButtonStateLeft = 0;
+int lastButtonStateFront = 0;
+int lastButtonStateRight = 0;
+unsigned long lastDebounceTimeLeft = 0;
+unsigned long lastDebounceTimeFront = 0;
+unsigned long lastDebounceTimeRight = 0;
+const int debounceDelay = 50;
+
 
 const int potPin = 35;
 int potValue = 0;
 float h = 0, t = 0, f = 0;
 float voltage = 0;
 DHT dht(DHTPIN, DHTTYPE);
+
+const unsigned long delayInterval = 1000;  // Blink interval in milliseconds
+
+unsigned long previousMillis = 0;
 
 String readDHTTemperature() {
   return String(t);
@@ -47,7 +65,7 @@ PubSubClient client(espClient);
 
 #define DHTTemperature_TOPIC    "ESP32/DHTTemperature"
 #define DHTHumidity_TOPIC       "ESP32/DHTHumidity"
-#define LightSensor_TOPIC       "ESP32/LightSensor"
+#define Tilt_TOPIC              "ESP32/Tilt"
 #define Potensiometer_TOPIC     "ESP32/Potensiometer"
 #define Ultrasonic_TOPIC        "ESP32/Ultrasonic"
 
@@ -72,10 +90,6 @@ void mqttconnect() {
 }
 
 
-
-
-
-
 void setup() {
   Serial.begin(115200);
   dht.begin();
@@ -96,21 +110,30 @@ void setup() {
   pinMode(TRIGGER_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
 
+  // initialize buttons and interrupt pin as inputs
+  pinMode(buttonPinLeft, INPUT_PULLUP);
+  pinMode(buttonPinFront, INPUT_PULLUP);
+  pinMode(buttonPinRight, INPUT_PULLUP);
+
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - previousMillis >= delayInterval) {
+    previousMillis = currentMillis;  // Update the previous timestamp
+
   if (!client.connected()) {
     mqttconnect();
   }
   client.loop();
 
-  unsigned long currentMillis = millis();
+  //================================================================
+  // DHT22 TEMPERATURE AND HUMIDITY SENSOR
+  //================================================================
 
-  //if (currentMillis - previousMillis >= interval) {
-   // previousMillis = currentMillis;
-  // Reading temperature or humidity takes about 250 milliseconds!
-  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
   h = dht.readHumidity();
   t = dht.readTemperature();
   f = dht.readTemperature(true);
@@ -120,18 +143,23 @@ void loop() {
     return;
   }
 
+  //================================================================
+  // POTENSIOMETER
+  //================================================================
+
+
   // Read from Potensiometer
   potValue = analogRead(potPin);
 
-  // Read from Photoresistor
-  int sensorValue = analogRead(34);
-  voltage = sensorValue * (5.0 / 1024.0);
+  //================================================================
+  // ULTRASONIC SENSOR
+  //================================================================
 
-    // Trigger the ultrasonic sensor
+  // Trigger the ultrasonic sensor
   digitalWrite(TRIGGER_PIN, LOW);
-  delayMicroseconds(5);
+  delayMicroseconds(2);
   digitalWrite(TRIGGER_PIN, HIGH);
-  delayMicroseconds(20);
+  delayMicroseconds(10);
   digitalWrite(TRIGGER_PIN, LOW);
 
   // Measure the echo pulse duration
@@ -139,6 +167,86 @@ void loop() {
 
   // Convert the pulse duration to distance
   float distance = duration * 0.034 / 2;
+
+  //================================================================
+  // BUTTON LEFT
+  //================================================================
+
+    int readingLeft = digitalRead(buttonPinLeft);
+
+    // check if increment button state has changed
+    if (readingLeft != lastButtonStateLeft) {
+      lastDebounceTimeLeft = millis();
+    }
+
+    // check if debounce delay has passed
+    if ((millis() - lastDebounceTimeLeft) >= debounceDelay) {
+      // update button state only if it has been stable for the debounce duration
+      buttonStateLeft = readingLeft;
+
+      // do something when increment button is pressed
+      if (buttonStateLeft == LOW) {
+        tiltValue -= 15;
+      }
+    }
+
+  // update last increment button state
+  lastButtonStateLeft = readingLeft;
+
+  //================================================================
+  // BUTTON FRONT
+  //================================================================
+
+  int readingFront = digitalRead(buttonPinFront);
+
+  // check if increment button state has changed
+  if (readingFront != lastButtonStateFront) {
+    lastDebounceTimeFront = millis();
+  }
+
+  // check if debounce delay has passed
+  if ((millis() - lastDebounceTimeFront) >= debounceDelay) {
+    // update button state only if it has been stable for the debounce duration
+    buttonStateFront = readingFront;
+
+    // do something when increment button is pressed
+    if (buttonStateFront == LOW) {
+      tiltValue = 0;
+    }
+  }
+
+  // update last increment button state
+  lastButtonStateFront = readingFront;
+
+  //================================================================
+  // BUTTON RIGHT
+  //================================================================
+
+  int readingRight = digitalRead(buttonPinRight);
+
+  // check if increment button state has changed
+  if (readingRight != lastButtonStateRight) {
+    lastDebounceTimeRight = millis();
+  }
+
+  // check if debounce delay has passed
+  if ((millis() - lastDebounceTimeRight) >= debounceDelay) {
+    // update button state only if it has been stable for the debounce duration
+    buttonStateRight = readingRight;
+
+    // do something when increment button is pressed
+    if (buttonStateRight == LOW) {
+      tiltValue += 15;
+    }
+  }
+
+  // update last increment button state
+  lastButtonStateRight = readingRight;
+
+
+  //================================================================
+  // PRINT AT SERIAL AND SEND TO MQTT CLIENT
+  //================================================================
 
   snprintf(msg, 5, "%f", t);
   Serial.print("t: ");
@@ -150,11 +258,6 @@ void loop() {
   Serial.println(h);
   client.publish(DHTHumidity_TOPIC, msg);
 
-  snprintf(msg, 5, "%f", voltage);
-  Serial.print("light: ");
-  Serial.println(voltage);
-  client.publish(LightSensor_TOPIC, msg);
-
   snprintf(msg, 5, "%d", potValue);
   Serial.print("pot: ");
   Serial.println(potValue);
@@ -165,15 +268,12 @@ void loop() {
   Serial.println(distance);
   client.publish(Ultrasonic_TOPIC, msg);
 
-  delay(1000);
+  snprintf(msg, 5, "%d", tiltValue);
+  Serial.print("tilt Value: ");
+  Serial.println(tiltValue);
+  client.publish(Tilt_TOPIC, msg);
 
- // }
-
-
-
-
-
-
+  }
 
 
 
