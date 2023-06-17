@@ -212,8 +212,11 @@ const char index_html[] PROGMEM = R"rawliteral(
     gaugeTemp.value = JSON.parse(event.data).temperature;
     gaugePotensio.value = JSON.parse(event.data).potensiometer / 40.95;
     gaugeHum.value = JSON.parse(event.data).humidity;
+    
     const distance = document.querySelector("#distance");
+    const gyro = document.querySelector("#gyro");
     distance.innerHTML = JSON.parse(event.data).distance;
+    // gyro.innerHTML = JSON.parse(event.data).gyro;
   });
   </script>
 </body>
@@ -311,6 +314,10 @@ void loop() {
   webSocketOutput += ",";
   webSocketOutput += "\"distance\" : ";
   webSocketOutput += distance;
+  // TODO: ADD PUSH BUTTON TILT IMPLEMENTATION
+  // webSocketOutput += ",";
+  // webSocketOutput += "\"gyro\" : ";
+  // webSocketOutput += gyro;
   webSocketOutput += "}";
 
   ws.textAll(webSocketOutput);
