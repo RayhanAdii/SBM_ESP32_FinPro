@@ -49,7 +49,7 @@ const char index_html[] PROGMEM = R"rawliteral(
         <canvas id="humidity"></canvas>
       </div>
       <div class="card">
-        <p class="card-title">Jarak</p>
+        <p class="card-title">Velocity</p>
         <canvas id="potensiometer"></canvas>
       </div>
     </div>
@@ -183,7 +183,7 @@ const char index_html[] PROGMEM = R"rawliteral(
     renderTo: 'potensiometer',
     width: 300,
     height: 300,
-    units: "Meter (m)",
+    units: "Meter / second (m/s)",
     minValue: 0,
     maxValue: 100,
     colorValueBoxRect: "#049faa",
