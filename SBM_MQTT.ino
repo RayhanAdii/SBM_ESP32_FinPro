@@ -13,8 +13,8 @@ const char* mqtt_server = "192.168.181.232";
 
 #define DHTPIN 4     // Digital pin connected to the DHT sensor
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
-#define TRIGGER_PIN 12
-#define ECHO_PIN 14
+#define TRIGGER_PIN 5
+#define ECHO_PIN 18
 
 unsigned long previousMillis = 0;
 const unsigned long interval = 1000; // Interval between distance measurements (in milliseconds)
