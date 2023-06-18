@@ -18,13 +18,13 @@
     <h2>Sensor Data</h2>
     <div class="main-container">
       <div class="content">
-        <div class="card-grid">
+        <div class="card-content-sensor">
           <div class="card">
-            <p class="card-title">Temperature</p>
+            <p class="card-title">Suhu</p>
             <canvas id="temperature"></canvas>
           </div>
           <div class="card">
-            <p class="card-title">Humidity</p>
+            <p class="card-title">Kelembapan</p>
             <canvas id="humidity"></canvas>
           </div>
           <div class="card">
@@ -33,8 +33,8 @@
           </div>
         </div>
       </div>
-      <div class="container">
-        <div class="card-grid-bottom">
+      <div class="content-distance">
+        <div class="card-content-distance">
           <div class="card">
             <p class="card-title">Jarak dari Benda di Depan</p>
             <p id="distance"></p>
@@ -45,6 +45,23 @@
           </div>
         </div>
       </div>
+      <div class="content-velocity">
+        <div class="card-content-velocity">
+          <div class="card card-velocity">
+            <p class="card-title">Chart Velocity</p>
+            <canvas id="chart-velocity"></canvas>
+            <p id="distance"></p>
+          </div>
+          <div class="card">
+            <p class="card-title">Jarak yang Ditempuh</p>
+            <p id="jarak-ditempuh"></p>
+          </div>
+        </div>
+      </div>
+      <footer>
+        Made by: Rayhan Adi W., Moh. Rizky Arif, Daffa Kamal, Laily Medha Nur
+        I., and Salma Asma N.
+      </footer>
     </div>
 
     <script defer>
@@ -54,7 +71,7 @@
         renderTo: "temperature",
         width: 120,
         height: 400,
-        units: "Temperature C",
+        units: "Temperature (\xB0C)",
         minValue: 0,
         startAngle: 90,
         ticksAngle: 180,
@@ -131,7 +148,7 @@
         renderTo: "potensiometer",
         width: 300,
         height: 300,
-        units: "Meter (m)",
+        units: "Meter / second (m/s)",
         minValue: 0,
         maxValue: 100,
         colorValueBoxRect: "#049faa",
@@ -163,15 +180,46 @@
         animationRule: "linear",
       }).draw();
 
+      let xValues = [0];
+      let yValues = [0];
+      let jarakDitempuh = 0;
+      let timer_buff = 1;
+
       websocket.addEventListener("message", (event) => {
         gaugeTemp.value = JSON.parse(event.data).temperature;
         gaugePotensio.value = JSON.parse(event.data).potensiometer / 40.95;
         gaugeHum.value = JSON.parse(event.data).humidity;
 
+        jarakDitempuh += JSON.parse(event.data).potensiometer / 40.95;
+
         const distance = document.querySelector("#distance");
         const gyro = document.querySelector("#gyro");
+        const jarakDitempuhHTML = document.querySelector("#jarak-ditempuh");
         distance.innerHTML = JSON.parse(event.data).distance;
-        // gyro.innerHTML = JSON.parse(event.data).gyro;
+        jarakDitempuhHTML.innerHTML = jarakDitempuh;
+        gyro.innerHTML = JSON.parse(event.data).gyro;
+
+        /// Velocity Chart
+        xValues.push(timer_buff);
+        yValues.push(JSON.parse(event.data).potensiometer / 40.95);
+        timer_buff += 1;
+        new Chart("chart-velocity", {
+          type: "line",
+          data: {
+            labels: xValues.slice(-30),
+            datasets: [
+              {
+                data: yValues.slice(-30),
+                borderColor: "red",
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            legend: { display: false },
+            animation: false,
+          },
+        });
       });
     </script>
   </body>
