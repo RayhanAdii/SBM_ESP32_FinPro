@@ -100,7 +100,7 @@ const char index_html[] PROGMEM = R"rawliteral(
 <head>
   <title>WebSocket Sensor Data</title>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/dundorma/SBM-FINALPROJECT-FRONTEND/style.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/dundorma/SBM-FINALPROJECT-FRONTEND@main/style.css">
   <script src="http://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </head>
