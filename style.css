@@ -42,10 +42,10 @@ h2 {
 .main-container {
   padding-bottom: 4%;
 }
-.content {
+.content-sensor {
   padding: 1% 5% 5% 5%;
 }
-.content .card-content-sensor {
+.content-sensor .card-content-sensor {
   max-width: 1200px;
 }
 .card-content-sensor, .card-content-distance, .card-content-velocity {
