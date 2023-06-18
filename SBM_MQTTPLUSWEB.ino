@@ -109,9 +109,9 @@ const char index_html[] PROGMEM = R"rawliteral(
     <h1>ESP WEB SERVER GAUGES</h1>
   </div>
   <h2>Sensor Data</h2>
-
+  
     <div class="main-container">
-      <div class="content">
+      <div class="content-sensor">
         <div class="card-content-sensor">
           <div class="card">
             <p class="card-title">Suhu</p>
