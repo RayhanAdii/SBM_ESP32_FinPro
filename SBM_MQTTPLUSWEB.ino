@@ -108,49 +108,54 @@ const char index_html[] PROGMEM = R"rawliteral(
   <div class="topnav">
     <h1>ESP WEB SERVER GAUGES</h1>
   </div>
-  <h1>Sensor Data</h1>
-  <div class="content">
-    <div class="card-grid">
-      <div class="card">
-        <p class="card-title">Temperature</p>
-        <canvas id="temperature"></canvas>
+  <h2>Sensor Data</h2>
+
+    <div class="main-container">
+      <div class="content">
+        <div class="card-content-sensor">
+          <div class="card">
+            <p class="card-title">Suhu</p>
+            <canvas id="temperature"></canvas>
+          </div>
+          <div class="card">
+            <p class="card-title">Kelembapan</p>
+            <canvas id="humidity"></canvas>
+          </div>
+          <div class="card">
+            <p class="card-title">Jarak</p>
+            <canvas id="potensiometer"></canvas>
+          </div>
+        </div>
       </div>
-      <div class="card">
-        <p class="card-title">Humidity</p>
-        <canvas id="humidity"></canvas>
+      <div class="content-distance">
+        <div class="card-content-distance">
+          <div class="card">
+            <p class="card-title">Jarak dari Benda di Depan</p>
+            <p id="distance"></p>
+          </div>
+          <div class="card">
+            <p class="card-title">Sudut Gyro</p>
+            <p id="gyro"></p>
+          </div>
+        </div>
       </div>
-      <div class="card">
-        <p class="card-title">Velocity</p>
-        <canvas id="potensiometer"></canvas>
+      <div class="content-velocity">
+        <div class="card-content-velocity">
+          <div class="card card-velocity">
+            <p class="card-title">Chart Velocity</p>
+            <canvas id="chart-velocity"></canvas>
+          </div>
+          <div class="card">
+            <p class="card-title">Jarak yang Ditempuh</p>
+            <p id="jarak-ditempuh"></p>
+          </div>
+        </div>
       </div>
+      <footer>
+        Made by: Rayhan Adi W., Moh. Rizky Arif, Daffa Kamal, Laily Medha Nur
+        I., and Salma Asma N.
+      </footer>
     </div>
-  </div>
-  <div class="container">
-    <div class="card-grid">
-      <div class="card">
-        <p class="card-title">Jarak dari Benda di Depan</p>
-        <p id="distance"></p>
-      </div>
-      <div class="card">
-        <p class="card-title">Sudut Gyro</p>
-        <p id="gyro"></p>
-      </div> 
-    </div>
-  </div>
-  <div class="container">
-    <div class="card-grid">
-      <div class="card">
-        <p class="card-title">Chart Velocity</p>
-        <canvas id="chart-velocity"></canvas>
-      </div> 
-    </div>
-    <div class="card-grid">
-      <div class="card">
-        <p class="card-title">Jarak Ditempuh</p>
-        <h3 id="jarak-ditempuh"></h3>
-      </div> 
-    </div>
-  </div>
 
   <script defer>
     const websocket = new WebSocket("ws://192.168.0.100/ws");
