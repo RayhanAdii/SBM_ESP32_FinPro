@@ -311,7 +311,7 @@ const char index_html[] PROGMEM = R"rawliteral(
     const jarakDitempuhHTML = document.querySelector("#jarak-ditempuh");
     distance.innerHTML = JSON.parse(event.data).distance;
     jarakDitempuhHTML.innerHTML = jarakDitempuh;
-    // gyro.innerHTML = JSON.parse(event.data).gyro;
+    gyro.innerHTML = JSON.parse(event.data).gyro;
 
 
     /// Velocity Chart
